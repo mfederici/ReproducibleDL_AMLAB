@@ -14,7 +14,10 @@ def main():
     num_workers = 6
 
     dataset = MNIST('/data', transform=ToTensor())
-    train_loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    train_loader = DataLoader(dataset,
+                              batch_size=batch_size,
+                              shuffle=True,
+                              num_workers=num_workers)
 
     model = VAE(z_dim=z_dim, beta=beta, lr=lr)
     print(model)

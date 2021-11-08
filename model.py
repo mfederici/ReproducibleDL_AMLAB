@@ -82,10 +82,6 @@ class VAE(pl.LightningModule):
         # Loss
         loss = rec_loss + self.beta * kl_loss
 
-        self.log('Reconstruction', rec_loss.item())     # ADD FOR LOGGING
-        self.log('Regularization', kl_loss.item())      # ADD FOR LOGGING
-        self.log('Loss', kl_loss.item())                # ADD FOR LOGGING
-
         return loss
 
     def configure_optimizers(self):
