@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 
 from model import VAE
 
+
 def main():
     batch_size = 64
     z_dim = 64
@@ -25,6 +26,7 @@ def main():
     trainer = pl.Trainer()
 
     trainer.fit(model, train_dataloader=train_loader)
+
 
 if __name__ == '__main__':
     main()
