@@ -1,0 +1,5 @@
+_target_: torchvision.datasets.FashionMNIST
+root: ${device.data_root}
+download: True
+transform:
+  _target_: torchvision.transforms.ToTensor

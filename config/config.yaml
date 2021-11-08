@@ -1,5 +1,19 @@
-z_dim: 64
-lr: 1e-3
-batch_size: 128
-beta: 0.1
-num_workers: 6
+defaults:
+  - dataset: MNIST
+  - model: VAE
+  - device: laptop
+
+
+train_loader:
+  _target_:  torch.utils.data.DataLoader
+  dataset: ${dataset}
+  shuffle: True
+  batch_size: ${params.batch_size}
+  num_workers: ${device.num_workers}
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+  callbacks:
+    - _target_: callbacks.SamplingCallback
+    - _target_: callbacks.ReconstructionCallback
+  gpus: ${device.gpus}

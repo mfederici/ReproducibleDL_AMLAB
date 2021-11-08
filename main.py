@@ -1,28 +1,19 @@
 import hydra
+from hydra.utils import instantiate
 
-import pytorch_lightning as pl
-
-from torchvision.datasets import MNIST
-from torchvision.transforms import ToTensor
-from torch.utils.data import DataLoader
-
-from callbacks import SamplingCallback, ReconstructionCallback
-from model import VAE
+from utils import pprint
 
 
 @hydra.main(config_path='config', config_name='config.yaml')
 def main(conf):
+    pprint(conf)
 
-    dataset = MNIST('/data', transform=ToTensor())
-    train_loader = DataLoader(dataset,
-                              batch_size=conf.batch_size,
-                              shuffle=True,
-                              num_workers=conf.num_workers)
+    train_loader = instantiate(conf.train_loader)
 
-    model = VAE(z_dim=conf.z_dim, beta=conf.beta, lr=conf.lr)
+    model = instantiate(conf.model)
     print(model)
 
-    trainer = pl.Trainer(callbacks=[SamplingCallback(), ReconstructionCallback()])
+    trainer = instantiate(conf.trainer)
 
     for callback in trainer.callbacks:
         print(callback)

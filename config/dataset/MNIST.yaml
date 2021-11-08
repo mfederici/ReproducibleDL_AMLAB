@@ -1,0 +1,5 @@
+_target_: torchvision.datasets.MNIST
+root: ${device.data_root}
+download: True
+transform:
+  _target_: torchvision.transforms.ToTensor
