@@ -6,6 +6,7 @@ from torchvision.datasets import MNIST
 from torchvision.transforms import ToTensor
 from torch.utils.data import DataLoader
 
+from callbacks import SamplingCallback, ReconstructionCallback
 from model import VAE
 
 
@@ -21,9 +22,12 @@ def main(conf):
     model = VAE(z_dim=conf.z_dim, beta=conf.beta, lr=conf.lr)
     print(model)
 
-    trainer = pl.Trainer()
+    trainer = pl.Trainer(callbacks=[SamplingCallback(), ReconstructionCallback()])
 
-    trainer.fit(model, train_dataloader=train_loader)
+    for callback in trainer.callbacks:
+        print(callback)
+
+    trainer.fit(model, train_dataloaders=train_loader)
 
 if __name__ == '__main__':
     main()
