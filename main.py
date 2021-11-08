@@ -13,7 +13,10 @@ from model import VAE
 def main(conf):
 
     dataset = MNIST('/data', transform=ToTensor())
-    train_loader = DataLoader(dataset, batch_size=conf.batch_size, shuffle=True, num_workers=conf.num_workers)
+    train_loader = DataLoader(dataset,
+                              batch_size=conf.batch_size,
+                              shuffle=True,
+                              num_workers=conf.num_workers)
 
     model = VAE(z_dim=conf.z_dim, beta=conf.beta, lr=conf.lr)
     print(model)
