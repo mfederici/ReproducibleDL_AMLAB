@@ -56,6 +56,3 @@ class IndependentGaussian(nn.Module):
 
     def forward(self) -> Distribution:
         return Independent(Normal(loc=self.prior_mu, scale=self.prior_sigma), 1)
-
-    def extra_repr(self) -> str:
-        return 'Normal'

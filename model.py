@@ -1,5 +1,6 @@
 import torch
 import pytorch_lightning as pl
+from torchvision.utils import make_grid
 
 from torch.optim import Adam
 from pytorch_lightning.utilities.types import STEP_OUTPUT
@@ -40,7 +41,22 @@ class VAE(pl.LightningModule):
         # Loss
         loss = rec_loss + self.beta * kl_loss
 
+        # Logging
+        self.log('Train/loss', loss.item())
+        self.log('Train/reconstruction', rec_loss.item())
+        self.log('Train/regularization', kl_loss.item())
+        if batch_idx % 100 == 0:
+            recs = make_grid(p_x_z.mean)
+            recs = torch.clip(recs, 0, 1)
+            self.logger.experiment.add_image('Train/reconstruction', recs, global_step=self.trainer.global_step)
+            samples = make_grid(self.sample([64]))
+            samples = torch.clip(samples, 0, 1)
+            self.logger.experiment.add_image('Samples', samples, global_step=self.trainer.global_step)
+
         return loss
+
+    def sample(self, shape: torch.Size = torch.Size([])) -> torch.Tensor:
+        return self.decoder(self.prior().sample(shape)).mean
 
     def configure_optimizers(self):
         return Adam([
