@@ -1,0 +1,3 @@
+num_workers: 6
+data_root: /data
+gpus: 0

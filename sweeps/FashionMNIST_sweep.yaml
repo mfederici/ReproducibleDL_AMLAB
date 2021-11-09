@@ -1,0 +1,21 @@
+program: main.py
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - model=VAE
+  - dataset=FashionMNIST
+  - +trainer.max_epochs=10
+  - ${args_no_hyphens}
+method: bayes
+metric: Train/ELBO
+goal:
+parameters:
+  params.beta:
+    distribution: log_uniform
+    min: 1e-6
+    max: 2
+  params.batch_size:
+    values:
+      - 64
+      - 128

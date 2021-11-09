@@ -1,0 +1,13 @@
+# @package _global_
+
+model:
+  _target_: model.VAE
+  z_dim: ${params.z_dim}
+  beta: ${params.beta}
+  lr: ${params.lr}
+
+params:
+  z_dim: 64
+  lr: 1e-3
+  batch_size: 128
+  beta: 0.1

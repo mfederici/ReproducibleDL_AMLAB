@@ -1,8 +1,13 @@
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
+from torch.distributions import Independent, Normal, Distribution
 from utils import Apply
 
+
 class Encoder(nn.Module):
-    def __init__(self, z_dim):
+    def __init__(self, z_dim: int):
         super(Encoder, self).__init__()
 
         self.net = nn.Sequential(
@@ -24,7 +29,7 @@ class Encoder(nn.Module):
 
 
 class Decoder(nn.Module):
-    def __init__(self, z_dim):
+    def __init__(self, z_dim: int):
         super(Decoder, self).__init__()
 
         self.net = nn.Sequential(
@@ -43,15 +48,11 @@ class Decoder(nn.Module):
         return p_x_z
 
 
-class Prior(nn.Module):
-    def __init__(self, z_dim):
-        super(Prior, self).__init__()
+class IndependentGaussian(nn.Module):
+    def __init__(self, z_dim: int):
+        super(IndependentGaussian, self).__init__()
         self.register_buffer('prior_mu', torch.zeros(z_dim))
         self.register_buffer('prior_sigma', torch.ones(z_dim))
 
-    def forward(self):
+    def forward(self) -> Distribution:
         return Independent(Normal(loc=self.prior_mu, scale=self.prior_sigma), 1)
-
-    def extra_repr(self) -> str:
-        return 'Normal'
-

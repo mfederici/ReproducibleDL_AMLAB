@@ -1,0 +1,22 @@
+program: main.py
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - model=VAE
+  - dataset=MNIST
+  - +trainer.max_epochs=10
+  - ${args_no_hyphens}
+method: bayes
+metric:
+  name: Train/ELBO
+  goal: maximize
+parameters:
+  params.beta:
+    distribution: log_uniform
+    min: -9
+    max: 1
+  params.batch_size:
+    values:
+      - 64
+      - 128
