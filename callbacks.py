@@ -2,9 +2,10 @@ from typing import Any, Optional
 
 import torch
 import pytorch_lightning as pl
+import wandb
 
 from pytorch_lightning.callbacks import Callback
-from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
 from torchvision.utils import make_grid
 
 
@@ -25,6 +26,9 @@ class SamplingCallback(Callback):
             trainer.logger.experiment.add_image('Samples',
                                                 samples,
                                                 global_step=trainer.global_step)
+        elif isinstance(trainer.logger, WandbLogger):
+            trainer.logger.experiment.log({'Samples': wandb.Image(samples),
+                                           'trainer/global_step': trainer.global_step})
 
 
 class ReconstructionCallback(Callback):
@@ -60,4 +64,7 @@ class ReconstructionCallback(Callback):
             trainer.logger.experiment.add_image('Reconstructions',
                                                 x_rec,
                                                 global_step=trainer.global_step)
+        elif isinstance(trainer.logger, WandbLogger):
+            trainer.logger.experiment.log({'Reconstruction': wandb.Image(x_rec),
+                                           'trainer/global_step': trainer.global_step})
 

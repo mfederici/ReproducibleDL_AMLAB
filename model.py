@@ -44,6 +44,7 @@ class VAE(pl.LightningModule):
         self.log('Train/loss', loss.item())
         self.log('Train/reconstruction', rec_loss.item())
         self.log('Train/regularization', kl_loss.item())
+        self.log('Train/ELBO', -rec_loss.item() - kl_loss.item())
 
         return loss
 

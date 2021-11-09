@@ -6,6 +6,9 @@ import torch.nn as nn
 from shutil import copytree
 from typing import Callable, Any
 
+from omegaconf import OmegaConf
+from pytorch_lightning.loggers import WandbLogger
+
 
 class Apply(nn.Module):
     def __init__(self, f: Callable, *args, **kwargs):
@@ -55,7 +58,6 @@ def pprint(d, indent=0):
 SPLIT_TOKEN = '.'
 VAR_REGEX = '.*\${([a-z]|[A-Z]|_)+([a-z]|[A-Z]|[0-9]|\.|_)*}.*'
 
-
 # utilities to flatten and re-inflate the configuration for wandb
 def _flatten_config(config, prefix, flat_config):
     for key, value in config.items():
@@ -89,16 +91,11 @@ def check_config(config, flat_config):
 def add_config(experiment, conf):
     # Create a dictionary with the unresolved configuration
     unresolved_config = dict(yaml.safe_load(OmegaConf.to_yaml(conf, resolve=False)))
-    # Ignore some irrelevant configuration
-    unresolved_config = {k: v for k, v in unresolved_config.items()}
     # Flatten the configuration
     flat_config = flatten_config(unresolved_config)
 
     # Update the configuration
     experiment.config.update(flat_config)
-
-    # Check for inconsistencies
-    # check_config(conf, wandb.config)
 
     # Copy hydra config into the files folder so that everything is stored
     copytree('.hydra', os.path.join(experiment.dir, 'hydra'))

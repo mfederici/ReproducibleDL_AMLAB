@@ -1,7 +1,8 @@
 import hydra
 from hydra.utils import instantiate
+from pytorch_lightning.loggers import WandbLogger
 
-from utils import pprint
+from utils import pprint, add_config
 
 
 @hydra.main(config_path='config', config_name='config.yaml')
@@ -15,10 +16,14 @@ def main(conf):
 
     trainer = instantiate(conf.trainer)
 
+    if isinstance(trainer.logger, WandbLogger):
+        add_config(trainer.logger.experiment, conf)
+
     for callback in trainer.callbacks:
         print(callback)
 
     trainer.fit(model, train_dataloaders=train_loader)
+
 
 if __name__ == '__main__':
     main()
