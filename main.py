@@ -14,8 +14,9 @@ def main():
     beta = 0.1
     lr = 1e-3
     num_workers = 6
+    data_root = '/data'
 
-    dataset = MNIST('/data', transform=ToTensor())
+    dataset = MNIST(data_root, download=True, transform=ToTensor())
     train_loader = DataLoader(dataset,
                               batch_size=batch_size,
                               shuffle=True,
